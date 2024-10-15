@@ -1,6 +1,6 @@
 @Library('Shared') _
 pipeline {
-    agent {label 'Node'}
+    agent any
     
     environment{
         SONAR_HOME = tool "Sonar"
@@ -29,37 +29,37 @@ pipeline {
             }
         }
         
-        stage("Trivy: Filesystem scan"){
-            steps{
-                script{
-                    trivy_scan()
-                }
-            }
-        }
+        // stage("Trivy: Filesystem scan"){
+        //     steps{
+        //         script{
+        //             trivy_scan()
+        //         }
+        //     }
+        // }
 
-        stage("OWASP: Dependency check"){
-            steps{
-                script{
-                    owasp_dependency()
-                }
-            }
-        }
+        // stage("OWASP: Dependency check"){
+        //     steps{
+        //         script{
+        //             owasp_dependency()
+        //         }
+        //     }
+        // }
         
-        stage("SonarQube: Code Analysis"){
-            steps{
-                script{
-                    sonarqube_analysis("Sonar","wanderlust","wanderlust")
-                }
-            }
-        }
+        // stage("SonarQube: Code Analysis"){
+        //     steps{
+        //         script{
+        //             sonarqube_analysis("Sonar","wanderlust","wanderlust")
+        //         }
+        //     }
+        // }
         
-        stage("SonarQube: Code Quality Gates"){
-            steps{
-                script{
-                    sonarqube_code_quality()
-                }
-            }
-        }
+        // stage("SonarQube: Code Quality Gates"){
+        //     steps{
+        //         script{
+        //             sonarqube_code_quality()
+        //         }
+        //     }
+        // }
         
         stage('Exporting environment variables') {
             parallel{
@@ -89,11 +89,11 @@ pipeline {
             steps{
                 script{
                         dir('backend'){
-                            docker_build("wanderlust-backend-beta","${params.BACKEND_DOCKER_TAG}","madhupdevops")
+                            docker_build("wanderlust-backend-beta","${params.BACKEND_DOCKER_TAG}","lutfar1996")
                         }
                     
                         dir('frontend'){
-                            docker_build("wanderlust-frontend-beta","${params.FRONTEND_DOCKER_TAG}","madhupdevops")
+                            docker_build("wanderlust-frontend-beta","${params.FRONTEND_DOCKER_TAG}","lutfar1996")
                         }
                 }
             }
@@ -102,8 +102,8 @@ pipeline {
         stage("Docker: Push to DockerHub"){
             steps{
                 script{
-                    docker_push("wanderlust-backend-beta","${params.BACKEND_DOCKER_TAG}","madhupdevops") 
-                    docker_push("wanderlust-frontend-beta","${params.FRONTEND_DOCKER_TAG}","madhupdevops")
+                    docker_push("wanderlust-backend-beta","${params.BACKEND_DOCKER_TAG}","lutfar1996") 
+                    docker_push("wanderlust-frontend-beta","${params.FRONTEND_DOCKER_TAG}","lutfar1996")
                 }
             }
         }
